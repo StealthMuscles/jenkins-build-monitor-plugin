@@ -87,4 +87,14 @@ public class NullBuildView implements BuildViewModel {
     public List<String> knownFailures() {
         return null;
     }
+
+    @Override
+    public String runningNodeName() {
+        return null;
+    }
+
+    @Override
+    public String runningNodeVNCLink() {
+        return null;
+    }
 }

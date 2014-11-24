@@ -15,11 +15,18 @@
                        href="{{job.url}}">{{job.name}}</a>
                 </h2>
                 <ul class="description">
+                    <li data-ng-show="job.building">Running on: <strong>
+                        <span data-ng-bind-html-unsafe="job.runningNodeVNCLink"></span>
+                        </strong>
+                    </li>
+                </ul>
+                <ul class="description">
                     <li data-ng-show="job.claimed">Claimed by <strong>{{ job.claimAuthor }}</strong>: {{ job.claimReason }}</li>
                 </ul>
                 <ul ng-if="job.shouldIndicateCulprits" class="culprits">
                     <li data-ng-repeat="name in job.culprits">{{name}}</li>
                 </ul>
+
                 <ul ng-if="job.hasKnownFailures" class="failures">
                     <li data-ng-repeat="name in job.knownFailures">{{name}}</li>
                 </ul>

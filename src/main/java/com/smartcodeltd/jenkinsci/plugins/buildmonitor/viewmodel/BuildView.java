@@ -7,11 +7,17 @@ import hudson.model.AbstractBuild;
 import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.User;
+import hudson.model.StreamBuildListener;
+import hudson.EnvVars;
+import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BuildView implements BuildViewModel {
 
@@ -169,5 +175,59 @@ public class BuildView implements BuildViewModel {
         this.build = build;
         this.systemTime = systemTime;
         this.augmentor = augmentor;
+    }
+
+    @Override
+    public String runningNodeName() {
+        EnvVars env;
+        String ret = "";
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        StreamBuildListener listener = new StreamBuildListener(output);
+        try {
+            env = this.build.getEnvironment(listener);
+            ret = env.get("NODE_NAME");
+        } catch (IOException ex) {
+            Logger.getLogger(BuildView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(BuildView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (ret == null || ret.isEmpty())
+        {
+            ret = "master";
+        }
+
+        return ret;
+    }
+
+    @Override
+    public String runningNodeVNCLink() {
+        String format = "<a title=\"%s\" href=\"%s\">%s</a>";
+        String nodeName = this.runningNodeName();
+        if (nodeName == null ? "master" == null : nodeName.equals("master"))
+        {
+            return String.format(format, nodeName, "vnc://Jenkins@p-dv-mac-pro1.local", nodeName);
+        }
+
+        EnvVars env;
+        String ssh = "";
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        StreamBuildListener listener = new StreamBuildListener(output);
+        try {
+            env = this.build.getEnvironment(listener);
+            ssh = env.get("SSH_CONNECTION");
+        } catch (IOException ex) {
+            Logger.getLogger(BuildView.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(BuildView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (ssh != null && !ssh.isEmpty() && ssh.split(" ").length > 1)
+        {
+            return String.format(format, nodeName, "vnc://Jenkins@" + ssh.split(" ")[2], nodeName);
+        }
+
+        Logger.getLogger(BuildView.class.getName()).log(Level.WARNING, "No SSH_CONNECTION variable set and not master node, returning master url");
+        return String.format(format, nodeName, "vnc://Jenkins@p-dv-mac-pro1.local", nodeName);
     }
 }

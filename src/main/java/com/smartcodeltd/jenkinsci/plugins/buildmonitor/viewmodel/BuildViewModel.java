@@ -28,4 +28,7 @@ public interface BuildViewModel {
     boolean hasKnownFailures();
 
     List<String> knownFailures();
+
+    public String runningNodeName();
+    public String runningNodeVNCLink();
 }

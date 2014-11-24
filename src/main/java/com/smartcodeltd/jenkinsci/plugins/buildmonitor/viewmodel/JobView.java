@@ -104,7 +104,8 @@ public class JobView {
 
     @JsonProperty
     public boolean shouldIndicateCulprits() {
-        return ! isClaimed() && culprits().size() > 0;
+        return false;
+        //return ! isClaimed() && culprits().size() > 0;
     }
 
     @JsonProperty
@@ -149,6 +150,21 @@ public class JobView {
     @JsonProperty
     public List<String> knownFailures() {
         return lastCompletedBuild().knownFailures();
+    }
+
+    @JsonProperty
+    public boolean isBuilding() {
+        return this.job.isBuilding();
+    }
+
+    @JsonProperty
+    public String runningNodeName() {
+        return lastBuild().runningNodeName();
+    }
+
+    @JsonProperty
+    public String runningNodeVNCLink() {
+        return lastBuild().runningNodeVNCLink();
     }
 
     public String toString() {

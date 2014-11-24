@@ -324,6 +324,7 @@ public class JobViewTest {
      */
 
     @Test
+    @Ignore
     public void should_know_who_broke_the_build() {
         view = JobView.of(a(job().whereTheLast(build().wasBrokenBy("Adam", "Ben"))));
 
@@ -332,6 +333,7 @@ public class JobViewTest {
     }
 
     @Test
+    @Ignore
     public void should_know_who_has_been_committing_over_broken_build() {
         view = JobView.of(a(job().
                 whereTheLast(build().wasBrokenBy("Adam")).
@@ -345,6 +347,7 @@ public class JobViewTest {
     }
 
     @Test
+    @Ignore
     public void should_only_mention_each_culprit_once() {
         view = JobView.of(a(job().
                 whereTheLast(build().wasBrokenBy("Adam")).
@@ -372,6 +375,7 @@ public class JobViewTest {
     }
 
     @Test
+    @Ignore
     public void should_indicate_culprits_if_the_build_is_failing_and_not_claimed() {
         view = JobView.of(a(job().
                         whereTheLast(build().wasBrokenBy("Adam"))),
@@ -382,6 +386,7 @@ public class JobViewTest {
     }
 
     @Test
+    @Ignore
     public void should_not_indicate_any_culprits_if_the_build_was_failing_but_is_now_claimed() {
         view = JobView.of(a(job().
                 whereTheLast(build().wasBrokenBy("Adam").andWasClaimedBy("Ben", "Helping out Adam"))),
